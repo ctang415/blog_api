@@ -25,7 +25,6 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRoute)
 app.use('/posts', postsRoute)
-app.use('/comments', commentsRoute)
 
 app.use(function(req, res, next) {
   res.locals.user = req.user || null;

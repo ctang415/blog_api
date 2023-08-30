@@ -26,17 +26,17 @@ exports.comment_create_post = [
     body('message').trim().isLength({min: 2}).escape(),
     asyncHandler (async (req, res, next ) => {
         const errors = validationResult(req);
-        const comment=  new Comment (
+        const comment =  new Comment (
             {
                 author: req.body.author,
-                message: req.body.message
+                message: req.body.message,
+                post: req.params.id
             }
         )
         if (!errors.isEmpty()) {
             res.json( {comment: comment, errors: errors.array()} )
         } else {
             await comment.save()
-            res.redirect(comment.url)
         }
     })
 ]

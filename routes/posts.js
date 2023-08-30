@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const post_controller = require('../controllers/postsController')
+const commentsRoute = require('./comments')
 
 router.get('/', post_controller.post_list)
 
@@ -21,5 +22,7 @@ router.put('/:postid', post_controller.post_update_put)
 router.get('/:postid', post_controller.post_draft_get)
 
 router.put('/:postid', post_controller.post_draft_put)
+
+router.use('/:postid/comments', commentsRoute)
 
 module.exports = router

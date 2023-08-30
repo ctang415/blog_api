@@ -1,5 +1,7 @@
+import { decode } from 'html-entities'
 import { useState,  useEffect } from 'react'
 import StyledLink from './styled/styledlink'
+
 const Blog = () => {
     const [ post, setPost] = useState([])
     let ignore = false;
@@ -29,8 +31,8 @@ const Blog = () => {
                     <StyledLink to={`${item.url}`}>
                     <div className="blog-post">
                         <p>{item.date_formatted}</p>
-                        <h2>{item.title}</h2>
-                        <p>{item.message}</p>
+                        <h2>{decode(item.title)}</h2>
+                        <p>{decode(item.message)}</p>
                     </div>
                     </StyledLink>
                 )
