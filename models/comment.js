@@ -8,6 +8,10 @@ const CommentSchema = new Schema (
         date: { type: Date, default: Date.now},
         message: {type: String, minLength: 2, required: true},
         post: { type: Schema.Types.ObjectId, ref: "Post" }
+    },
+    {
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true }
     }
 )
 

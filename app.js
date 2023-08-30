@@ -1,6 +1,7 @@
 require('dotenv').config() // allows usage of environmental variables from env file
 const createError = require('http-errors'); 
 const express = require('express')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const passport = require('passport')
 const mongoose = require('mongoose')
@@ -13,8 +14,7 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
 
 const app = express()
-
-
+app.use(cors())
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 

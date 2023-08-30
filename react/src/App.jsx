@@ -9,13 +9,14 @@ import styled from 'styled-components'
 export const Wrapper = styled.div`
   display: flex;
   margin: 15% auto;
-  max-width: 100vw;
 `
 
 const StyledDiv = styled.div`
   display: flex;
   justify-content: center;
   position: relative;
+  min-height: 100vh;
+  max-width: 98.5vw;
 `
 
 function App() {

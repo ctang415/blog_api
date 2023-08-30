@@ -4,6 +4,8 @@ const comment_controller = require('../controllers/commentsController');
 
 router.get('/comments', comment_controller.comment_list);
 
+router.get('/comments/:commentid', comment_controller.comment_detail)
+
 router.get('/comments', comment_controller.comment_create_get);
 
 router.post('/comments', comment_controller.comment_create_post);

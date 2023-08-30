@@ -1,9 +1,17 @@
-* {
+body {
   margin: 0;
   padding: 0;
 }
 
-#root {
-  text-align: center;
+.blog-post {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1em;
+  padding: 2em;
+  max-height: 30vh;
+  min-width: 55vw;
+  border: 1px solid grey;
+  text-overflow: ellipsis;
 }
 

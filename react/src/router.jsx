@@ -3,6 +3,8 @@ import App from './App'
 import Home from './components/home'
 import Post from './components/post'
 import PostDetail from './components/postdetail'
+import Contact from './components/contact'
+import Blog from './components/blog'
 
 const Router = () => {
     const router = createBrowserRouter (
@@ -16,11 +18,15 @@ const Router = () => {
                     },
                     {
                         path: '/blog',
+                        element: <Blog/>
+                    },
+                    {
+                        path: '/posts/:id',
                         element: <Post/>
                     },
                     {
-                        path: '/blog/:id',
-                        element: <PostDetail/>
+                        path: '/contact',
+                        element: <Contact/>
                     }
                 ]
             }

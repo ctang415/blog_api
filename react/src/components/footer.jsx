@@ -18,6 +18,8 @@ const StyledNavFooter = styled(StyledNav)`
     bottom: 0;
     border-top: 1px solid black;
     width: 100%;
+    position: absolute;
+    background-color: blanchedalmond;
 
 `
 

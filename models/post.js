@@ -10,7 +10,11 @@ const PostSchema = new Schema (
         message: { type: String, minLength: 2, required: true },
         visible: { type: Boolean, default: false },
         comments: [ { type: Schema.Types.ObjectId, ref: "Comment"} ]
-    }
+    },
+        {
+            toObject: { virtuals: true },
+            toJSON: { virtuals: true }
+        }
 )
 
 PostSchema.virtual('date_formatted').get( function () {

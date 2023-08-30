@@ -8,7 +8,6 @@ const StyledNav = styled.nav`
     padding: 1.5em;
     z-index: 99;
     background-color: white;
-    position: fixed;
 `
 
 export default StyledNav
