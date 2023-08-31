@@ -7,14 +7,14 @@ const Post = () => {
     const [postDetail, setPostDetail] = useState([])
     let params = useParams()
     let ignore = false
-    useEffect (() => {
+    useEffect (() => { 
         console.log(postDetail)
         const fetchPost = async () => {
             try {
                 let response = await fetch('http://localhost:3000/posts/'+ `${params.id}`);
                 let data = await response.json()
                 setPostDetail([data.post_detail])
-                console.log(postDetail[0].message)
+                console.log(postDetail[0])
             } catch(err) {
                 console.log(err)
             }

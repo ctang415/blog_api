@@ -30,7 +30,7 @@ exports.comment_create_post = [
             {
                 author: req.body.author,
                 message: req.body.message,
-                post: req.params.id
+                post: req.body.post
             }
         )
         if (!errors.isEmpty()) {

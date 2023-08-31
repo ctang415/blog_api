@@ -4,10 +4,11 @@ const CommentForm = () => {
     let params = useParams()
     const [author, setAuthor] = useState('');
     const [message, setMessage] = useState('');
+    const [ id, setId ] = useState(params.id)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        let comment = {author: author, message: message}
+        let comment = {author: author, message: message, post: id}
         try {
             let response = await fetch(`http://localhost:3000/posts/${params.id}/comments`, {
                 method: "POST",
