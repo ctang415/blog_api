@@ -23,7 +23,7 @@ const Post = () => {
           fetchPost()
         }  
         return () =>  { ignore = true}
-    }, [])
+    }, [ignore])
     
     return (
         <div style={{display: 'flex', flexDirection: 'column', gap: '2em'}}>

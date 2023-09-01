@@ -3,11 +3,10 @@ import { useState, useEffect } from 'react'
 
 const Comment = ( {postDetail} ) => {
    const [comments, setComments ] = useState([]);
-   let ignore = false
+   let loading = true;
 
    useEffect (() => {
         const fetchComments = async () => {
-            console.log(postDetail[0].url)  
             try {
                 let response = await fetch(`http://localhost:3000` + postDetail[0].url + '/comments')
                 let data = await response.json()
@@ -16,11 +15,11 @@ const Comment = ( {postDetail} ) => {
                 console.log(err)
             }
         }
-        if (!ignore) {
+        if (loading) {
           fetchComments()
         } 
-        return () =>  { ignore = true}
-   }, []) 
+        return () =>  { loading = false}
+   }, [postDetail]) 
 
     return (
         <div className="comment">
@@ -28,7 +27,7 @@ const Comment = ( {postDetail} ) => {
             <h4>Comments</h4>
             {comments.map(comment => {
                 return (
-                    <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center',
+                    <div key={comment._id} style={{display: 'flex', flexDirection: 'column', justifyContent: 'center',
                     minWidth: '55vw', maxWidth: '55vw', borderTop: '1px solid grey', borderBottom: '1px solid grey'}}>
                         <p>{comment.author} posted on {comment.date_formatted}</p>
                         <p>{comment.message}</p>

@@ -26,7 +26,7 @@ const Blog = () => {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2em'}}>
-            {post.map(item => {
+            {post.map(item => { item.visible === true 
                 return (
                     <StyledLink to={`${item.url}`}>
                     <div className="blog-post">
