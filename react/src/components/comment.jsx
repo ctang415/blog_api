@@ -8,8 +8,9 @@ const Comment = ( {postDetail} ) => {
    useEffect (() => {
         const fetchComments = async () => {
             try {
-                let response = await fetch(`http://localhost:3000` + postDetail[0].url + '/comments')
+                let response = await fetch(`http://localhost:3000` + postDetail[0].url)
                 let data = await response.json()
+                console.log(data)
                 setComments(data.comment_list)
             } catch (err) {
                 console.log(err)
@@ -28,7 +29,8 @@ const Comment = ( {postDetail} ) => {
             {comments.map(comment => {
                 return (
                     <div key={comment._id} style={{display: 'flex', flexDirection: 'column', justifyContent: 'center',
-                    minWidth: '55vw', maxWidth: '55vw', borderTop: '1px solid grey', borderBottom: '1px solid grey'}}>
+                    minWidth: '55vw', maxWidth: '55vw', borderTop: '1px solid grey', borderBottom: '1px solid grey',
+                    backgroundColor: 'white', padding: '1em'}}>
                         <p>{comment.author} posted on {comment.date_formatted}</p>
                         <p>{comment.message}</p>
                     </div>

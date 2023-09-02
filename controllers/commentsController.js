@@ -1,4 +1,5 @@
 const Comment = require('../models/comment')
+const Post = require('../models/post')
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 
@@ -8,13 +9,18 @@ exports.comment_list = asyncHandler ( async (req, res, next ) => {
 })
 
 exports.comment_detail = asyncHandler ( async (req, res, next ) => {
-    const comment = await Comment.findById(req.params.id).populate('post').exec()
+    const [comment, allCommentsInPost] = await Promise.all(
+        [
+            Comment.findById(req.params.id).populate('post').exec(),
+            Post.find({comment: req.params.id}, "author message date").exec()
+        ]
+    )
     if (comment === null) {
         const err = new Error("Comment does not exist")
         err.status = 404;
         return next(err)
     }
-    res.json({ comment: comment })
+    res.json({ comment: comment, comment_list: allCommentsInPost })
 })
 
 exports.comment_create_get = asyncHandler ( async (req, res, next ) => {
@@ -42,6 +48,7 @@ exports.comment_create_post = [
 ]
 
 exports.comment_delete_get = asyncHandler ( async (req, res, next ) => {
+    console.log(req)
     const comment = await Comment.findById(req.params.id).populate('post').exec()
     if (comment === null) {
         res.redirect(`/posts/${comment.post}`)

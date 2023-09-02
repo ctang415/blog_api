@@ -2,6 +2,7 @@ import { decode } from 'html-entities';
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import StyledLink from '../../../react/src/components/styled/styledlink';
+import CommentEdit from './commentedit';
 
 const Create = () => {
     const [title, setTitle] = useState('');
@@ -10,8 +11,9 @@ const Create = () => {
     const [url, setUrl] = useState('')
     const [date, setDate] = useState('')
     const [action, setAction] = useState('update')
+    const [postDetail, setPostDetail] = useState([])
     let ignore = false;
-    let params = useParams()
+    let params = useParams();
     const divStyle = 
         {
             display: 'flex', flexDirection: 'column',
@@ -90,6 +92,7 @@ const Create = () => {
                 try {
                     let response = await fetch (`http://localhost:3000/posts/${params.id}`)
                     let data = await response.json()
+                    setPostDetail([data.post_detail])
                     setTitle(decode(data.post_detail.title))
                     setMessage(decode(data.post_detail.message))
                     setPublish(data.post_detail.visible)
@@ -117,12 +120,14 @@ const Create = () => {
                 <textarea rows='20' style={{resize: 'none'}} placeholder="Type your message here" name="message" 
                 value={message} onChange={(e) => setMessage(e.target.value)}></textarea>
                     <div style={{display: 'flex', gap: '1em', justifyContent: 'center'}}>
-                        <button type="submit" onClick={() => handleUnpublish()}>Unpublish</button>
-                        <button type="submit" onClick={()=> handlePublish()}>Publish</button>
+                        <button type="submit" onClick={ publish ? () => handleUnpublish() : () => handlePublish()}>
+                            {publish ? 'Unpublish' : 'Publish'}
+                        </button>
                         <button type="submit" onClick={()=> setAction('update')}>Save Updates</button>
                         <button type="submit" onClick={()=> setAction('delete')}>Delete</button>
                     </div>
             </form>
+            <CommentEdit params={params} postDetail={postDetail}/>
             <StyledLink to="/">
                 <button>Go Back</button>
             </StyledLink>

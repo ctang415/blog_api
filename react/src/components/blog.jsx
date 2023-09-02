@@ -26,9 +26,9 @@ const Blog = () => {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2em'}}>
-            {post.map(item => { item.visible === true 
+            {post.filter(item => item.visible === true).map(item => { 
                 return (
-                    <StyledLink to={`${item.url}`}>
+                    <StyledLink key={item._id} to={`${item.url}`}>
                     <div className="blog-post">
                         <p>{item.date_formatted}</p>
                         <h2>{decode(item.title)}</h2>
