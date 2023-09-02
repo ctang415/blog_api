@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 const CommentForm = () => {
     let params = useParams()
-    const [author, setAuthor] = useState('');
+    const [author, setAuthor] = useState('Anonymous');
     const [message, setMessage] = useState('');
     const [ id, setId ] = useState(params.id)
 

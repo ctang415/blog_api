@@ -5,9 +5,15 @@ const CommentEdit = ( { params, postDetail}) => {
     const [id, setId] = useState('')
     let loading = true;
 
-    const handleDelete = async () => {
+    const handleDelete = async (id) => {
+        setId(id)
         try {
-            let response = await fetch(`http://localhost:3000/posts/${params.id}/${id}/delete`)
+            let response = await fetch(`http://localhost:3000/posts/${params.id}/comments/${id}/delete`, {
+                method: 'POST'
+            })
+            if (!response.ok) {
+                return response.status
+            }
             await response.json()
         } catch (err) {
             console.log(err)
@@ -40,7 +46,7 @@ const CommentEdit = ( { params, postDetail}) => {
                 alignItems: 'center', justifyContent: 'center', border: '1px solid grey', padding: '1em', backgroundColor:'white'}}>
                     <p>{comment.author} posted on {comment.date_formatted}</p>
                     <p>{comment.message}</p>
-                    <button onClick={() => console.log(params.id)}>Delete this comment</button>
+                    <button onClick={() => handleDelete(comment._id)}>Delete this comment</button>
                 </div>
             )
         })

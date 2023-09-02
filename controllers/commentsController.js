@@ -9,18 +9,13 @@ exports.comment_list = asyncHandler ( async (req, res, next ) => {
 })
 
 exports.comment_detail = asyncHandler ( async (req, res, next ) => {
-    const [comment, allCommentsInPost] = await Promise.all(
-        [
-            Comment.findById(req.params.id).populate('post').exec(),
-            Post.find({comment: req.params.id}, "author message date").exec()
-        ]
-    )
+    const comment = await Comment.findById(req.params.commentid).populate('post').exec()
     if (comment === null) {
         const err = new Error("Comment does not exist")
         err.status = 404;
         return next(err)
     }
-    res.json({ comment: comment, comment_list: allCommentsInPost })
+    res.json({ comment: comment })
 })
 
 exports.comment_create_get = asyncHandler ( async (req, res, next ) => {
@@ -49,7 +44,7 @@ exports.comment_create_post = [
 
 exports.comment_delete_get = asyncHandler ( async (req, res, next ) => {
     console.log(req)
-    const comment = await Comment.findById(req.params.id).populate('post').exec()
+    const comment = await Comment.findById(req.params.commentid).populate('post').exec()
     if (comment === null) {
         res.redirect(`/posts/${comment.post}`)
     }
@@ -57,7 +52,7 @@ exports.comment_delete_get = asyncHandler ( async (req, res, next ) => {
 })
 
 exports.comment_delete_delete = asyncHandler ( async (req, res, next) => {
-    await Comment.findByIdAndRemove(req.params.id)
+    await Comment.findByIdAndRemove(req.params.commentid)
     res.redirect('/')
 })
 

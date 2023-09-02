@@ -10,7 +10,6 @@ const Comment = ( {postDetail} ) => {
             try {
                 let response = await fetch(`http://localhost:3000` + postDetail[0].url)
                 let data = await response.json()
-                console.log(data)
                 setComments(data.comment_list)
             } catch (err) {
                 console.log(err)
