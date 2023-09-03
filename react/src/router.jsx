@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App'
 import Home from './components/home'
 import Post from './components/post'
-import PostDetail from './components/postdetail'
 import Contact from './components/contact'
 import Blog from './components/blog'
 

@@ -44,6 +44,7 @@ exports.post_create_post = [
             res.json( {post: post, errors: errors.array() })
         } else {
             await post.save()
+            res.json(post)
         }
     })
 ]
@@ -86,13 +87,12 @@ exports.post_update_put = [
                 _id: req.params.postid
             }
         )
-        if (!errors.isEmpty()) {
-            console.log(req) 
+        if (!errors.isEmpty()) { 
             res.json( {post: post, errors: errors.array()})
             return
         } else {
-            console.log(req)
             const updatedPost = await Post.findByIdAndUpdate(req.params.postid, post, {})
+            res.json(updatedPost)
         }
 })
 ]

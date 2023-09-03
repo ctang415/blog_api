@@ -9,9 +9,13 @@ const Home = () => {
         const fetchPosts = async () => {
             try {
                 let response = await fetch ('http://localhost:3000/posts')
+                if (!response.ok) {
+                    throw new Error(`${response.status}`)
+                }
                 let data = await response.json()
-                console.log(data)
-                setPosts(data.post_list)
+                if(response.status === 200) {
+                    setPosts(data.post_list)
+                }
             } catch (err) {
                 console.log(err)
             }

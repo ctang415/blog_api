@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import StyledLink from '../../../react/src/components/styled/styledlink';
 import CommentEdit from './commentedit';
+import MiniModal from './minimodal';
+import Modal from './modal'
 
 const Create = () => {
     const [title, setTitle] = useState('');
@@ -12,6 +14,9 @@ const Create = () => {
     const [date, setDate] = useState('')
     const [action, setAction] = useState('update')
     const [postDetail, setPostDetail] = useState([])
+    const [modal, setModal] = useState(false)
+    const [miniModal, setMiniModal] = useState(false)
+
     let ignore = false;
     let params = useParams();
     const divStyle = 
@@ -50,30 +55,24 @@ const Create = () => {
     const handleUpdate = async (e) => {
         let post = {title: title, message: message, date: date, visible: publish}
         try {
-            let response = await fetch(`http://localhost:3000/posts/${params.id}/${action}`, {
+            const response = await fetch(`http://localhost:3000/posts/${params.id}/update`, {
                 method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(post)
             })
             if (!response.ok) {
-                throw new Error(`${response.status}`)
+                throw new Error (`${response.status}`)
+            }
+            const data = await response.json()
+            if (response.status === 200) {
+                setMiniModal(true)
             } 
-            let data = await response.json()
         } catch (err) {
-            console.log(err)
+            console.error(err)
         }
     }
     
-    const handleDelete = async (e) => {
-        try {
-            let response = await fetch(`http://localhost:3000/posts/${params.id}/${action}`, {
-                method: 'POST', redirect: "follow", headers: {'Content-Type': 'application/json'}
-            })
-            if (!response.ok) {
-                throw new Error(`${response.status}`)
-            } 
-            await response.json()
-        } catch (err) {
-            console.log(err)
-        }
+    const handleDelete = () => {
+        setAction('delete')
+        setModal(true)
     }
 
     const handleUnpublish = () => {
@@ -86,17 +85,24 @@ const Create = () => {
         setPublish(true)
     }
 
+
+
     useEffect(() => {
         if (params.id) {
             const fetchPost = async () => {
                 try {
                     let response = await fetch (`http://localhost:3000/posts/${params.id}`)
                     let data = await response.json()
+                    if (!response.ok) {
+                        throw new Error (`${response.status}`)
+                    }
+                    if (response.status === 200 ){
                     setPostDetail([data.post_detail])
                     setTitle(decode(data.post_detail.title))
                     setMessage(decode(data.post_detail.message))
                     setPublish(data.post_detail.visible)
                     setDate(data.post_detail.date)
+                    }
                 } catch (err) {
                     console.log(err)
                 }
@@ -111,6 +117,8 @@ const Create = () => {
     if (params.id) {
         return (
             <div style={divStyle}>
+                <MiniModal setMiniModal={setMiniModal} miniModal={miniModal} />
+                <Modal action={action} params={params} setModal={setModal} modal={modal} />
             <form action={`http://localhost:5173/posts/${params.id}/${action}`} onSubmit={handleEdit} style={{ display: 'flex', minWidth: '55vw', textAlign: 'center', 
             flexDirection: 'column', gap: '1em'} }>
                 <h2>Edit a Post</h2>

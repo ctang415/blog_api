@@ -43,7 +43,6 @@ exports.comment_create_post = [
 ]
 
 exports.comment_delete_get = asyncHandler ( async (req, res, next ) => {
-    console.log(req)
     const comment = await Comment.findById(req.params.commentid).populate('post').exec()
     if (comment === null) {
         res.redirect(`/posts/${comment.post}`)

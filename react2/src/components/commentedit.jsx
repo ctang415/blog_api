@@ -1,23 +1,15 @@
 import {useState, useEffect} from 'react'
+import Modal from './modal'
 
 const CommentEdit = ( { params, postDetail}) => {
     const [comments, setComments ] = useState([])
     const [id, setId] = useState('')
+    const [modal, setModal] = useState(false)
     let loading = true;
 
     const handleDelete = async (id) => {
         setId(id)
-        try {
-            let response = await fetch(`http://localhost:3000/posts/${params.id}/comments/${id}/delete`, {
-                method: 'POST'
-            })
-            if (!response.ok) {
-                return response.status
-            }
-            await response.json()
-        } catch (err) {
-            console.log(err)
-        }
+        setModal(true)
     }
     
     useEffect (() => {
@@ -40,8 +32,10 @@ const CommentEdit = ( { params, postDetail}) => {
    }, [postDetail]) 
 
     return (
-        comments.map(comment => {
-            return (
+            <>
+            <Modal setModal={setModal} modal={modal} id={id} params={params} />
+            {comments.map(comment => {
+                return (
                 <div key={comment._id} style={{display: 'flex', flexDirection: 'column', minWidth:'55vw', maxWidth: '55vw',
                 alignItems: 'center', justifyContent: 'center', border: '1px solid grey', padding: '1em', backgroundColor:'white'}}>
                     <p>{comment.author} posted on {comment.date_formatted}</p>
@@ -49,7 +43,8 @@ const CommentEdit = ( { params, postDetail}) => {
                     <button onClick={() => handleDelete(comment._id)}>Delete this comment</button>
                 </div>
             )
-        })
+        })}
+        </>
     )
 }
 
