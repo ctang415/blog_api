@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 
-const MiniModal = ( { setMiniModal, miniModal }) => {
+const MiniModal = ( { setMiniModal, miniModal, params }) => {
     
     useEffect(() => {
         if (miniModal) {
@@ -14,7 +14,7 @@ const MiniModal = ( { setMiniModal, miniModal }) => {
         return (
             <div id="myModal" className="modal">
                 <div className="modal-content">
-                    <p>Changes saved!</p>
+                    <p>{params.id ? 'Changes saved!' : 'Post created!'}</p>
                     </div>
             </div>
         )

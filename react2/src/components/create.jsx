@@ -1,10 +1,11 @@
 import { decode } from 'html-entities';
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import StyledLink from '../../../react/src/components/styled/styledlink';
 import CommentEdit from './commentedit';
 import MiniModal from './minimodal';
 import Modal from './modal'
+import Error from './error'
 
 const Create = () => {
     const [title, setTitle] = useState('');
@@ -16,7 +17,9 @@ const Create = () => {
     const [postDetail, setPostDetail] = useState([])
     const [modal, setModal] = useState(false)
     const [miniModal, setMiniModal] = useState(false)
-
+    const [error, setError] = useState(false)
+    const [comments, setComments] = useState([])
+    const navigate = useNavigate();
     let ignore = false;
     let params = useParams();
     const divStyle = 
@@ -26,6 +29,8 @@ const Create = () => {
         }
 
     const handleSubmit = async (e) => {
+        setMiniModal(true)
+        e.preventDefault()
         let post = { title: title, message: message, visible: publish };
         try {
             let response = await fetch('http://localhost:3000/posts', 
@@ -37,7 +42,11 @@ const Create = () => {
                 throw new Error(`${response.status}`)
             } 
             await response.json()
-            setUrl(response.url)
+            if (response.status === 200) {
+                setTimeout( () => {
+                    navigate('/')
+                }, 700)
+            }
         } catch (err) {
             console.log(err)
         }
@@ -85,8 +94,6 @@ const Create = () => {
         setPublish(true)
     }
 
-
-
     useEffect(() => {
         if (params.id) {
             const fetchPost = async () => {
@@ -97,13 +104,15 @@ const Create = () => {
                         throw new Error (`${response.status}`)
                     }
                     if (response.status === 200 ){
-                    setPostDetail([data.post_detail])
-                    setTitle(decode(data.post_detail.title))
-                    setMessage(decode(data.post_detail.message))
-                    setPublish(data.post_detail.visible)
-                    setDate(data.post_detail.date)
+                        setPostDetail([data.post_detail])
+                        setTitle(decode(data.post_detail.title))
+                        setMessage(decode(data.post_detail.message))
+                        setPublish(data.post_detail.visible)
+                        setDate(data.post_detail.date) 
+                        setComments(data.comment_list)
                     }
                 } catch (err) {
+                    setError(true)
                     console.log(err)
                 }
             }
@@ -114,12 +123,16 @@ const Create = () => {
         }
     }, [])
 
-    if (params.id) {
+    if (params.id && error) {
+        return (
+            <Error error={error} />
+        )
+    } else if (params.id) {
         return (
             <div style={divStyle}>
-                <MiniModal setMiniModal={setMiniModal} miniModal={miniModal} />
+                <MiniModal params={params} setMiniModal={setMiniModal} miniModal={miniModal} />
                 <Modal action={action} params={params} setModal={setModal} modal={modal} />
-            <form action={`http://localhost:5173/posts/${params.id}/${action}`} onSubmit={handleEdit} style={{ display: 'flex', minWidth: '55vw', textAlign: 'center', 
+            <form onSubmit={handleEdit} style={{ display: 'flex', minWidth: '55vw', textAlign: 'center', 
             flexDirection: 'column', gap: '1em'} }>
                 <h2>Edit a Post</h2>
                 <label htmlFor="title">Title</label>
@@ -135,7 +148,7 @@ const Create = () => {
                         <button type="submit" onClick={()=> setAction('delete')}>Delete</button>
                     </div>
             </form>
-            <CommentEdit params={params} postDetail={postDetail}/>
+            <CommentEdit params={params} postDetail={postDetail} comments={comments} url={url}/>
             <StyledLink to="/">
                 <button>Go Back</button>
             </StyledLink>
@@ -144,7 +157,8 @@ const Create = () => {
     } else {
     return (
         <div style={divStyle}>
-            <form action={`http://localhost:5173${url}`} onSubmit={handleSubmit} style={  { display: 'flex', minWidth: '55vw', textAlign: 'center', 
+            <MiniModal params={params} setMiniModal={setMiniModal} miniModal={miniModal} />
+            <form onSubmit={handleSubmit} style={  { display: 'flex', minWidth: '55vw', textAlign: 'center', 
             flexDirection: 'column', gap: '1em'} }>
                 <h2>Create a Post</h2>
                 <label htmlFor="title">Title</label>

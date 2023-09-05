@@ -36,8 +36,10 @@ exports.comment_create_post = [
         )
         if (!errors.isEmpty()) {
             res.json( {comment: comment, errors: errors.array()} )
+            return
         } else {
             await comment.save()
+            res.json(comment)
         }
     })
 ]
@@ -47,11 +49,11 @@ exports.comment_delete_get = asyncHandler ( async (req, res, next ) => {
     if (comment === null) {
         res.redirect(`/posts/${comment.post}`)
     }
-    res.json( {comment: comment})
+    res.json({comment: comment})
 })
 
 exports.comment_delete_delete = asyncHandler ( async (req, res, next) => {
-    await Comment.findByIdAndRemove(req.params.commentid)
-    res.redirect('/')
+    let deletedComment = await Comment.findByIdAndRemove(req.params.commentid)
+    res.status(200).json( {success: true})
 })
 

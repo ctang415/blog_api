@@ -1,28 +1,36 @@
+import { useNavigate } from "react-router-dom"
+
 const Modal = ( { action, setModal, modal, params, id }) => {
-    
+let navigate = useNavigate()
+
     const confirmDelete = async () => {
         setModal(false)
         if (id) {
-        try {
-            let response = await fetch(`http://localhost:3000/posts/${params.id}/comments/${id}/delete`, {
-                method: 'POST'
-            })
-            if (!response.ok) {
-                return response.status
-            }
-            await response.json()
-        } catch (err) {
-            console.log(err)
-        } 
-    } else {
+            try {
+                let response = await fetch(`http://localhost:3000/posts/${params.id}/comments/${id}/delete`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'}
+                })
+                let data = await response.json()
+                if (response.status === 200) {
+                    setTimeout(() => window.location.reload(), 500)
+                }
+            } catch (err) {
+                console.log(err)
+            }         
+        } else {
             try {
                 let response = await fetch(`http://localhost:3000/posts/${params.id}/${action}`, {
-                    method: 'POST', redirect: "follow", headers: {'Content-Type': 'application/json'}
+                    method: 'POST', headers: {'Content-Type': 'application/json'}
                 })
                 if (!response.ok) {
                     throw new Error(`${response.status}`)
                 } 
                 await response.json()
+                if (response.status === 200) {
+                    setTimeout(() => {
+                        navigate('/')
+                    }, 500)
+                }
             } catch (err) {
                 console.log(err)
             }

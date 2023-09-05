@@ -1,8 +1,7 @@
 import {useState, useEffect} from 'react'
 import Modal from './modal'
 
-const CommentEdit = ( { params, postDetail}) => {
-    const [comments, setComments ] = useState([])
+const CommentEdit = ( { ignore, params, postDetail, comments }) => {
     const [id, setId] = useState('')
     const [modal, setModal] = useState(false)
     let loading = true;
@@ -11,27 +10,7 @@ const CommentEdit = ( { params, postDetail}) => {
         setId(id)
         setModal(true)
     }
-    
-    useEffect (() => {
-        if (params.id) {
-        const fetchComments = async () => {
-            try {
-                let response = await fetch(`http://localhost:3000` + postDetail[0].url)
-                let data = await response.json()
-                setComments(data.comment_list)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-
-        if (loading) {
-          fetchComments()
-        } 
-    }
-        return () =>  { loading = false}
-   }, [postDetail]) 
-
-    return (
+        return (
             <>
             <Modal setModal={setModal} modal={modal} id={id} params={params} />
             {comments.map(comment => {

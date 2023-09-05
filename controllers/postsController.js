@@ -42,6 +42,7 @@ exports.post_create_post = [
         )
         if (!errors.isEmpty()) {
             res.json( {post: post, errors: errors.array() })
+            return
         } else {
             await post.save()
             res.json(post)
@@ -59,7 +60,7 @@ exports.post_delete_get = asyncHandler (async (req, res, next) => {
 
 exports.post_delete_delete = asyncHandler (async (req, res, next) => {
     await Post.findByIdAndRemove(req.params.postid)
-    res.redirect('/posts')
+    res.status(200).json({success: true})
 }) 
 
 exports.post_update_get = asyncHandler ( async (req, res, next) => {

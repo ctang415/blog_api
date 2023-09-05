@@ -35,7 +35,7 @@ const Home = () => {
             flexWrap: 'wrap', maxWidth: '60vw'}}>
                 {posts.map(post => {
                     return (
-                        <StyledLink to={post._id} 
+                        <StyledLink to={`/posts/${post._id}`} 
                         style={{display: 'flex', flexDirection: 'column', backgroundColor: 'white',
                         border: '1px solid black', borderRadius: '1em', minWidth: '15vw', overflow: 'hidden',
                         maxWidth: '15vw',
