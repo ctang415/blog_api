@@ -4,12 +4,14 @@ import Home from './components/home'
 import Post from './components/post'
 import Contact from './components/contact'
 import Blog from './components/blog'
+import ErrorPage from './components/errorpage'
 
 const Router = () => {
     const router = createBrowserRouter (
         [
             {
                 element: <App/>,
+                errorElement: <ErrorPage/>,
                 children: [
                     {
                         path: '/',
