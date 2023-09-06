@@ -24,7 +24,7 @@ exports.comment_create_get = asyncHandler ( async (req, res, next ) => {
 
 exports.comment_create_post = [
     body('author').trim().escape(),
-    body('message').trim().isLength({min: 2}).escape(),
+    body('message', "Message must be at least 2 characters").trim().isLength({min: 2}).escape(),
     asyncHandler (async (req, res, next ) => {
         const errors = validationResult(req);
         const comment =  new Comment (
@@ -35,7 +35,7 @@ exports.comment_create_post = [
             }
         )
         if (!errors.isEmpty()) {
-            res.json( {comment: comment, errors: errors.array()} )
+            res.status(400).json( {comment: comment, errors: errors.array()} )
             return
         } else {
             await comment.save()

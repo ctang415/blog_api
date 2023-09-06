@@ -1,6 +1,5 @@
 
 const CommentModal = ( {modal, handleSubmit, setModal}) => {
-
     
     if (modal) {
         return (

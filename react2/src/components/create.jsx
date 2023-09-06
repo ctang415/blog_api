@@ -20,6 +20,7 @@ const Create = () => {
     const [error, setError] = useState(false)
     const [comments, setComments] = useState([])
     const navigate = useNavigate();
+    const [fetchError, setFetchError] = useState([])
     let ignore = false;
     let params = useParams();
     const divStyle = 
@@ -29,7 +30,6 @@ const Create = () => {
         }
 
     const handleSubmit = async (e) => {
-        setMiniModal(true)
         e.preventDefault()
         let post = { title: title, message: message, visible: publish };
         try {
@@ -39,16 +39,17 @@ const Create = () => {
             body: JSON.stringify(post)
             })
             if (!response.ok) {
-                throw new Error(`${response.status}`)
-            } 
+                if (response.status === 400) {
+                    throw await response.json()
+                }
+            }
             await response.json()
             if (response.status === 200) {
-                setTimeout( () => {
-                    navigate('/')
-                }, 700)
+                setMiniModal(true)
+                setFetchError([])
             }
         } catch (err) {
-            console.log(err)
+            setFetchError(err.errors)
         }
     }
 
@@ -171,6 +172,14 @@ const Create = () => {
                         <button type="submit" onClick={()=> setPublish(false)}>Save as Draft</button>
                     </div>
             </form>
+            {fetchError.map(error => {
+                return (
+                    <div key={error.msg}>
+                        **{error.msg}**
+                    </div>
+                )
+            })
+    }
             <StyledLink to="/">
                 <button>Go Back</button>
             </StyledLink>

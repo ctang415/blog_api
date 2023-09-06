@@ -5,6 +5,7 @@ import {decode} from 'html-entities';
 
 const Post = () => {
     const [postDetail, setPostDetail] = useState([])
+    const [ comments, setComments] = useState([])
     let params = useParams()
     let ignore = false
 
@@ -13,7 +14,9 @@ const Post = () => {
             try {
                 let response = await fetch('http://localhost:3000/posts/'+ `${params.id}`);
                 let data = await response.json()
+                console.log(response) 
                 setPostDetail([data.post_detail])
+                setComments(data.comment_list)
             } catch(err) {
                 console.log(err)
             }
@@ -35,7 +38,7 @@ const Post = () => {
                     </div>
                 )
             })}
-            <Comment postDetail={postDetail}/>
+            <Comment comments={comments}/>
         </div>
     )
 }

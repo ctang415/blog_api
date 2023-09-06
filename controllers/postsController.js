@@ -28,8 +28,8 @@ exports.post_create_get = asyncHandler (async (req, res, next) => {
 })
 
 exports.post_create_post = [
-    body('title').trim().isLength({min: 2}).escape(),
-    body('message').trim().isLength({min: 2}).escape(),
+    body('title', 'Title must be at least 2 characters').trim().isLength({min: 2}).escape(),
+    body('message', 'Message must be at least 2 characters').trim().isLength({min: 2}).escape(),
     body('visible').escape(),
     asyncHandler (async (req, res, next) => {
         const errors = validationResult(req)
@@ -41,7 +41,7 @@ exports.post_create_post = [
             }
         )
         if (!errors.isEmpty()) {
-            res.json( {post: post, errors: errors.array() })
+            res.status(400).json( {post: post, errors: errors.array()})
             return
         } else {
             await post.save()

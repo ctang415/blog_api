@@ -8,6 +8,7 @@ const CommentForm = () => {
     const [message, setMessage] = useState('');
     const [ id, setId ] = useState(params.id)
     const [modal, setModal] = useState(false)
+    const [ fetchError, setFetchError] = useState([])
 
     const confirmPost = (e) => {
         e.preventDefault()
@@ -23,13 +24,21 @@ const CommentForm = () => {
                 body: JSON.stringify(comment)
             })
             if (!response.ok) {
-                throw new Error (`${response.status}`)
+                if (response.status === 400) {
+                    throw await response.json()
+                }
             }
             await response.json()
             if (response.status === 200) {
-                setModal(false)
+                setTimeout(() => {
+                    setFetchError([])
+                    setModal(false)
+                    window.location.reload()
+                }, 500)
             }
         } catch(err) {
+            setModal(false)
+            setFetchError(err.errors)
             console.log(err)
         }
     }
@@ -47,6 +56,13 @@ const CommentForm = () => {
             placeholder='Enter your message here' name='message'></textarea>
             <button type='submit'>Post</button>
         </form>
+        {fetchError.map(error => {
+            return (
+                <div key={error.msg}>
+                    **{error.msg}**
+                </div>
+            )
+        })}
         </>
     )
 }
