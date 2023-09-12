@@ -4,8 +4,6 @@ import Modal from './modal'
 const CommentEdit = ( { ignore, params, postDetail, comments }) => {
     const [id, setId] = useState('')
     const [modal, setModal] = useState(false)
-    let loading = true;
-
     const handleDelete = async (id) => {
         setId(id)
         setModal(true)

@@ -14,9 +14,8 @@ const Post = () => {
     useEffect (() => {
         const fetchPost = async () => {
             try {
-                let response = await fetch('http://localhost:3000/posts/'+ `${params.id}`);
+                let response = await fetch('http://localhost:3000/posts/'+ `${params.id}`) 
                 let data = await response.json()
-                console.log(response) 
                 if (response.status === 200 ) {
                     setPostDetail([data.post_detail])
                     setComments(data.comment_list)

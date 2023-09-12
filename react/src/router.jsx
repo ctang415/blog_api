@@ -6,6 +6,7 @@ import Contact from './components/contact'
 import Blog from './components/blog'
 import ErrorPage from './components/errorpage'
 
+
 const Router = () => {
     const router = createBrowserRouter (
         [

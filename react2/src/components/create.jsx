@@ -21,6 +21,7 @@ const Create = () => {
     const [comments, setComments] = useState([])
     const navigate = useNavigate();
     const [fetchError, setFetchError] = useState([])
+    const token = localStorage.getItem('token')
     let ignore = false;
     let params = useParams();
     const divStyle = 
@@ -35,7 +36,7 @@ const Create = () => {
         try {
             let response = await fetch('http://localhost:3000/posts', 
             { method: 'POST', 
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + `${token}`},
             body: JSON.stringify(post)
             })
             if (!response.ok) {
@@ -66,7 +67,8 @@ const Create = () => {
         let post = {title: title, message: message, date: date, visible: publish}
         try {
             const response = await fetch(`http://localhost:3000/posts/${params.id}/update`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(post)
+                method: 'POST', headers: {'Content-Type': 'application/json', 
+            'Authorization': 'Bearer ' + `${token}`}, body: JSON.stringify(post)
             })
             if (!response.ok) {
                 throw new Error (`${response.status}`)
@@ -99,7 +101,8 @@ const Create = () => {
         if (params.id) {
             const fetchPost = async () => {
                 try {
-                    let response = await fetch (`http://localhost:3000/posts/${params.id}`)
+                    let response = await fetch (`http://localhost:3000/posts/${params.id}`, 
+                    { headers: {'Authorization': 'Bearer ' + `${token}`}} );
                     let data = await response.json()
                     if (!response.ok) {
                         throw new Error (`${response.status}`)
@@ -111,6 +114,7 @@ const Create = () => {
                         setPublish(data.post_detail.visible)
                         setDate(data.post_detail.date) 
                         setComments(data.comment_list)
+                        console.log(comments)
                     }
                 } catch (err) {
                     setError(true)

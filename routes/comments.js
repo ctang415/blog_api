@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const comment_controller = require('../controllers/commentsController');
+const jwt = require('jsonwebtoken')
 
 router.get('/', comment_controller.comment_list);
 

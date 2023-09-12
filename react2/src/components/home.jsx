@@ -2,18 +2,23 @@ import { decode } from "html-entities";
 import { useState, useEffect } from "react"
 import StyledLink from "../../../react/src/components/styled/styledlink";
 
-const Home = () => {
+const Home = ( ) => {
     const [posts, setPosts] = useState([])
     let ignore = false;
+
     useEffect(() => {
+        const token = localStorage.getItem('token')
         const fetchPosts = async () => {
             try {
-                let response = await fetch ('http://localhost:3000/posts')
+                let response = await fetch ('http://localhost:3000/posts', {headers: 
+                {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + `${token}`}},
+                {credentials: 'include'})
                 if (!response.ok) {
                     throw new Error(`${response.status}`)
                 }
                 let data = await response.json()
                 if(response.status === 200) {
+                    console.log()
                     setPosts(data.post_list)
                 }
             } catch (err) {

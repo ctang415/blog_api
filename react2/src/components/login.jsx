@@ -1,11 +1,44 @@
+import { useState} from 'react'
+
 const Login = () => {
+    const [ username, setUsername ] = useState('')
+    const [ password, setPassword] = useState('')
+    const [ error, setError ] = useState('')
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const login = { username: username, password: password }
+        try {
+            const response = await fetch('http://localhost:3000' + '/login', {
+            method: 'POST', headers: {'Content-Type': 'application/json', 'Accept': 'application/json',
+            }, 
+            credentials: 'include', body: JSON.stringify(login) 
+        })
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw await response.json()
+            } 
+        }
+        let data = await response.json()
+        if (response.status === 200) {
+            console.log(response)
+            console.log(data)
+            localStorage.setItem('token', data.accessToken)
+        }
+        } catch (err) {
+            setError(err.error)
+            console.log(err)
+        }
+    }
+
     return (
-        <form style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1em', gap: '1em'}}>
+        <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1em', gap: '1em'}}>
             <h2>Login</h2>
             <label htmlFor="username">Username:</label>
-            <input type="text" name='username' />
+            <input type="text" name='username' onChange={(e) => setUsername(e.target.value)} required/>
             <label htmlFor="password">Password:</label>
-            <input type="text"name='password' />
+            <input type="password" name='password' onChange={(e) => setPassword(e.target.value)} required />
+            <div>{ !error ? '' : `**${error}**`}</div>
             <div>
                 <button type='submit'>Submit</button>
             </div>
