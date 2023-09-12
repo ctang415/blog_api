@@ -5,10 +5,11 @@ let navigate = useNavigate()
 
     const confirmDelete = async () => {
         setModal(false)
+        const token = localStorage.getItem('token')
         if (id) {
             try {
                 let response = await fetch(`http://localhost:3000/posts/${params.id}/comments/${id}/delete`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'}
+                    method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + `${token}`}
                 })
                 let data = await response.json()
                 if (response.status === 200) {
@@ -20,7 +21,7 @@ let navigate = useNavigate()
         } else {
             try {
                 let response = await fetch(`http://localhost:3000/posts/${params.id}/${action}`, {
-                    method: 'POST', headers: {'Content-Type': 'application/json'}
+                    method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + `${token}` }
                 })
                 if (!response.ok) {
                     throw new Error(`${response.status}`)

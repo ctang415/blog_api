@@ -13,6 +13,21 @@ router.post('/', comment_controller.comment_create_post);
 
 router.get('/:commentid/delete', comment_controller.comment_delete_get);
 
-router.post('/:commentid/delete', comment_controller.comment_delete_delete);
+router.post('/:commentid/delete', verifyToken, comment_controller.comment_delete_delete);
+
+function verifyToken (req, res, next) {
+    const bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== 'undefined') {
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        req.token = bearerToken;
+        next();
+    } else {
+        req.token = req.headers.cookie
+        console.log('bearer error')
+        res.sendStatus(403)
+    }
+}
+
 
 module.exports = router

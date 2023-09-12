@@ -2,6 +2,7 @@ const Comment = require('../models/comment')
 const Post = require('../models/post')
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken')
 
 exports.comment_list = asyncHandler ( async (req, res, next ) => {
     const comments = await Comment.find({}).populate('post').exec()
@@ -53,7 +54,13 @@ exports.comment_delete_get = asyncHandler ( async (req, res, next ) => {
 })
 
 exports.comment_delete_delete = asyncHandler ( async (req, res, next) => {
+    jwt.verify(req.token, process.env.secretkey, async (err, token) => {
+        if (err) {
+            res.status(403).json( {error: 'Could not connect to protected route'})
+            return
+        }
     let deletedComment = await Comment.findByIdAndRemove(req.params.commentid)
     res.status(200).json( {success: true})
+    })
 })
 
