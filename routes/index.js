@@ -69,6 +69,12 @@ router.post('/login', async (req, res, next) => {
         console.log('Error: Could not log in')
     }
 })
+
+router.post('/logout', (req, res, next) => {
+    req.token = null;
+    next()
+})
+
 /*
 router.post('/refresh', async  (req, res, next) => {
     const user = await User.findOne( {username: 'admin'})

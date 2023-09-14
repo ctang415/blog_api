@@ -46,7 +46,6 @@ exports.post_create_post = [
                 body('message', 'Message must be at least 2 characters').trim().isLength({min: 2}).escape(),
                 body('visible').escape(),
                 asyncHandler (async (req, res, next) => {
-                    console.log('hello')
                     const errors = validationResult(req)
                     const post = new Post (
                         {
@@ -61,7 +60,7 @@ exports.post_create_post = [
                 } else {
                     jwt.verify(req.token, process.env.secretkey, async (err, authData) => {
                         if (err) {
-                            res.status(403).json({error: 'error'})
+                            res.status(403).json()
                             console.log('Error: Could not connect to protected route')
                             return
                             } 
@@ -122,7 +121,7 @@ exports.post_update_put = [
         } else {
             jwt.verify(req.token, process.env.secretkey, async (err, token) => {
                 if (err) {
-                    res.status(403).json({error: 'Could not connect to protected route'})
+                    res.status(403).json()
                     return
                 }
             const updatedPost = await Post.findByIdAndUpdate(req.params.postid, post, {})

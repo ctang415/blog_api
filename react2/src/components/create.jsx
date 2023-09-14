@@ -1,13 +1,16 @@
 import { decode } from 'html-entities';
 import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import StyledLink from '../../../react/src/components/styled/styledlink';
 import CommentEdit from './commentedit';
 import MiniModal from './minimodal';
 import Modal from './modal'
 import Error from './error'
+import { LoginContext } from './logincontext';
+import { useContext } from 'react';
 
 const Create = () => {
+    const { login, token } = useContext(LoginContext) 
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState("");
     const [publish, setPublish] = useState(true)
@@ -21,7 +24,6 @@ const Create = () => {
     const [comments, setComments] = useState([])
     const navigate = useNavigate();
     const [fetchError, setFetchError] = useState([])
-    const token = localStorage.getItem('token')
     let ignore = false;
     let params = useParams();
     const divStyle = 
@@ -42,6 +44,12 @@ const Create = () => {
             if (!response.ok) {
                 if (response.status === 400) {
                     throw await response.json()
+                }
+                if (response.status === 403) {
+                    alert('Your session has expired. Redirecting to login page...')
+                setTimeout(() => {
+                   window.location.href = '/login'
+                }, 400)
                 }
             }
             await response.json()
@@ -71,6 +79,12 @@ const Create = () => {
             'Authorization': 'Bearer ' + `${token}`}, body: JSON.stringify(post)
             })
             if (!response.ok) {
+                if (response.status === 403) {
+                    alert('Your session has expired. Redirecting to login page...')
+                setTimeout(() => {
+                   window.location.href = '/login'
+                }, 400)
+                }
                 throw new Error (`${response.status}`)
             }
             const data = await response.json()
@@ -83,8 +97,13 @@ const Create = () => {
     }
     
     const handleDelete = () => {
-        setAction('delete')
-        setModal(true)
+        if (comments.length > 0) {
+            setFetchError('Please delete comments before proceeding')
+        } else {
+            setFetchError([])
+            setAction('delete')
+            setModal(true)
+        }
     }
 
     const handleUnpublish = () => {
@@ -114,11 +133,9 @@ const Create = () => {
                         setPublish(data.post_detail.visible)
                         setDate(data.post_detail.date) 
                         setComments(data.comment_list)
-                        console.log(comments)
                     }
                 } catch (err) {
                     setError(true)
-                    console.log(err)
                 }
             }
             if (!ignore) {
@@ -140,6 +157,7 @@ const Create = () => {
             <form onSubmit={handleEdit} style={{ display: 'flex', minWidth: '55vw', textAlign: 'center', 
             flexDirection: 'column', gap: '1em'} }>
                 <h2>Edit a Post</h2>
+                <Link to={ login ? "/logout" : "/login"}>{login ? 'Log Out' : 'Log In'}</Link>
                 <label htmlFor="title">Title</label>
                 <input type="text" placeholder="Title" name="title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
                 <label htmlFor="message">Post</label>
@@ -153,6 +171,9 @@ const Create = () => {
                         <button type="submit" onClick={()=> setAction('delete')}>Delete</button>
                     </div>
             </form>
+                <div style={{ textAlign: 'center', color: 'red'}}>
+                    {fetchError.length === 0 ? null : `***${fetchError}***`}
+                </div>
             <CommentEdit params={params} postDetail={postDetail} comments={comments} url={url}/>
             <StyledLink to="/">
                 <button>Go Back</button>
@@ -166,6 +187,7 @@ const Create = () => {
             <form onSubmit={handleSubmit} style={  { display: 'flex', minWidth: '55vw', textAlign: 'center', 
             flexDirection: 'column', gap: '1em'} }>
                 <h2>Create a Post</h2>
+                <Link to={ login ? "/logout" : "/login"}>{login ? 'Log Out' : 'Log In'}</Link>
                 <label htmlFor="title">Title</label>
                 <input type="text" placeholder="Title" name="title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
                 <label htmlFor="message">Post</label>

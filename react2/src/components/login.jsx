@@ -21,9 +21,10 @@ const Login = () => {
         }
         let data = await response.json()
         if (response.status === 200) {
-            console.log(response)
-            console.log(data)
             localStorage.setItem('token', data.accessToken)
+            setTimeout(() => {
+                navigate('/')
+            }, 750)
         }
         } catch (err) {
             setError(err.error)

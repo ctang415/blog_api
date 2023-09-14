@@ -15,6 +15,12 @@ let navigate = useNavigate()
                 if (response.status === 200) {
                     setTimeout(() => window.location.reload(), 500)
                 }
+                if (response.status === 403) {
+                    alert('Your session has expired. Redirecting to login page...')
+                    setTimeout(() => {
+                        navigate('/login')
+                    }, 500)
+                }
             } catch (err) {
                 console.log(err)
             }         

@@ -1,13 +1,17 @@
 import { decode } from "html-entities";
+import { useContext } from "react";
 import { useState, useEffect } from "react"
+import { Link } from "react-router-dom";
 import StyledLink from "../../../react/src/components/styled/styledlink";
+import { LoginContext } from "./logincontext";
 
 const Home = ( ) => {
     const [posts, setPosts] = useState([])
     let ignore = false;
-
+    const { login, token } = useContext(LoginContext)
+    
     useEffect(() => {
-        const token = localStorage.getItem('token')
+        console.log(login)
         const fetchPosts = async () => {
             try {
                 let response = await fetch ('http://localhost:3000/posts', {headers: 
@@ -33,6 +37,7 @@ const Home = ( ) => {
     return (
         <div style={{ display: 'flex', gap: '1.5em', flexDirection: 'column', alignItems: 'center'}}>
             <h1>Manage your Posts</h1>
+            <Link to={ login ? "/logout" : "/login"}>{login ? 'Log Out' : 'Log In'}</Link>
             <StyledLink to="/create">
                 <button>ADD NEW POST</button>
             </StyledLink>
