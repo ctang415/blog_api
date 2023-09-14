@@ -72,7 +72,7 @@ router.post('/login', async (req, res, next) => {
 
 router.post('/logout', (req, res, next) => {
     req.token = null;
-    next()
+    res.status(200).json({ msg: 'log out success'})
 })
 
 /*

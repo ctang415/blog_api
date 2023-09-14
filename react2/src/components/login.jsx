@@ -1,10 +1,17 @@
-import { useState} from 'react'
+import { useContext } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { LoginContext } from './logincontext'
 
 const Login = () => {
     const [ username, setUsername ] = useState('')
     const [ password, setPassword] = useState('')
     const [ error, setError ] = useState('')
-
+    const navigate = useNavigate();
+    const params = useParams()
+    const { logOut } = useContext(LoginContext)    
+    let ignore = false;
+    
     const handleSubmit = async (e) => {
         e.preventDefault()
         const login = { username: username, password: password }
@@ -31,6 +38,15 @@ const Login = () => {
             console.log(err)
         }
     }
+
+    useEffect(() => {
+        if (window.location.pathname === '/logout') {
+            if (!ignore) {
+                logOut() 
+            }
+        return () => { ignore = true}
+        }
+    }, [])
 
     return (
         <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1em', gap: '1em'}}>

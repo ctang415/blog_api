@@ -12,6 +12,7 @@ const Home = ( ) => {
     
     useEffect(() => {
         console.log(login)
+        
         const fetchPosts = async () => {
             try {
                 let response = await fetch ('http://localhost:3000/posts', {headers: 
@@ -22,7 +23,6 @@ const Home = ( ) => {
                 }
                 let data = await response.json()
                 if(response.status === 200) {
-                    console.log()
                     setPosts(data.post_list)
                 }
             } catch (err) {
