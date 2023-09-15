@@ -31,22 +31,22 @@ function App() {
   
   useEffect(() => {
     if (localStorage.length !== 0) {
-    let storageToken = localStorage.getItem('token')
-    let decodedToken  = jwt_decode(storageToken)
-    let currentDate = new Date()
+      let storageToken = localStorage.getItem('token')
+      let decodedToken  = jwt_decode(storageToken)
+      let currentDate = new Date()
     if (decodedToken.exp * 1000 < currentDate.getTime() || storageToken === null) {
       setToken(null)
       setLogin(false)
       localStorage.clear()
     } else {
-    setToken(storageToken)
-    setLogin(true)
+      setToken(storageToken)
+      setLogin(true)
     }
   }
   }, [] )
-  
+
   return (
-    <LoginContext.Provider value={{ login, token, logOut}}>
+    <LoginContext.Provider value={{ login, token, setLogin, setToken, logOut}}>
     <Routes>
       <Route path='/' exact element={<Home/>}></Route>
       <Route path="/posts/:id" element={<Create/>}></Route>

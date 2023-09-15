@@ -24,7 +24,6 @@ function verifyToken (req, res, next) {
         next();
     } else {
         req.token = req.headers.cookie
-        console.log('bearer error')
         res.sendStatus(403)
     }
 }

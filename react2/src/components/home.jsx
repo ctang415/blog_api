@@ -11,8 +11,6 @@ const Home = ( ) => {
     const { login, token } = useContext(LoginContext)
     
     useEffect(() => {
-        console.log(login)
-        
         const fetchPosts = async () => {
             try {
                 let response = await fetch ('http://localhost:3000/posts', {headers: 
@@ -34,6 +32,7 @@ const Home = ( ) => {
         }
         return () => { ignore = true}
     }, [])
+
     return (
         <div style={{ display: 'flex', gap: '1.5em', flexDirection: 'column', alignItems: 'center'}}>
             <h1>Manage your Posts</h1>

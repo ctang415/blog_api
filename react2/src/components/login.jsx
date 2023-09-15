@@ -9,7 +9,7 @@ const Login = () => {
     const [ error, setError ] = useState('')
     const navigate = useNavigate();
     const params = useParams()
-    const { logOut } = useContext(LoginContext)    
+    const { token, login, logOut, setToken, setLogin } = useContext(LoginContext)    
     let ignore = false;
     
     const handleSubmit = async (e) => {
@@ -29,6 +29,8 @@ const Login = () => {
         let data = await response.json()
         if (response.status === 200) {
             localStorage.setItem('token', data.accessToken)
+            setToken(data.accessToken)
+            setLogin(true)
             setTimeout(() => {
                 navigate('/')
             }, 750)
